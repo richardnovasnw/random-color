@@ -209,10 +209,7 @@ class _ZoomAndPanState extends State<ZoomAndPan> {
         child: SizedBox(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              InteractiveViewer(
+          child: InteractiveViewer(
                 constrained: true,
                 panEnabled: true,
                 child: Image.asset(
@@ -220,8 +217,7 @@ class _ZoomAndPanState extends State<ZoomAndPan> {
                   fit: BoxFit.contain,
                 ),
               ),
-            ],
-          ),
+           
         ),
       ),
     );
