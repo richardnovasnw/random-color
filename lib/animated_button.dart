@@ -1,3 +1,4 @@
+import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 
 class AnimatedButton extends StatefulWidget {
@@ -7,108 +8,78 @@ class AnimatedButton extends StatefulWidget {
   _AnimatedButtonState createState() => _AnimatedButtonState();
 }
 
-class _AnimatedButtonState extends State<AnimatedButton>
-    with TickerProviderStateMixin {
-  late double _scaleA;
-  late double _scaleB;
-
-  late AnimationController _controllerA;
-  late AnimationController _controllerB;
-
-  @override
-  void initState() {
-    _controllerA = AnimationController(
-      vsync: this,
-      duration: const Duration(
-        milliseconds: 0,
-      ),
-      lowerBound: 0,
-      upperBound: 0.1,
-    )..addListener(() {
-        setState(() {});
-      });
-
-    _controllerB = AnimationController(
-      vsync: this,
-      duration: const Duration(
-        milliseconds: 0,
-      ),
-      lowerBound: 0.0,
-      upperBound: 0.1,
-    )..addListener(() {
-        setState(() {});
-      });
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _controllerA.dispose();
-    _controllerB.dispose();
-  }
+class _AnimatedButtonState extends State<AnimatedButton> {
+  double padding1 = 8.0;
+  double padding2 = 8.0;
 
   @override
   Widget build(BuildContext context) {
-    _scaleA = 1 - _controllerA.value;
-    _scaleB = 1 - _controllerB.value;
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: GestureDetector(
-                onTapDown: _onTapDown,
-                onTapUp: _onTapUp,
-                child: Transform.scale(
-                  scale: _scaleA,
-                  child: Card(
-                    color: Colors.cyan,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 0.15,
+    return Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          TweenAnimationBuilder<double>(
+            onEnd: () {
+              setState(() {
+                padding1 = 8.0;
+              });
+            },
+            tween: Tween<double>(begin: 0, end: padding1),
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.elasticOut,
+            builder: (BuildContext context, double size, Widget? child) {
+              return GestureDetector(
+                child: Container(
+                  color: Colors.transparent,
+                  height: MediaQuery.of(context).size.height * .2,
+                  width: MediaQuery.of(context).size.width,
+                  child: Padding(
+                    padding: EdgeInsets.all(padding1),
+                    child: const Card(
+                      color: Colors.cyan,
                     ),
                   ),
                 ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: GestureDetector(
-                onTapDown: (TapDownDetails details) {
-                  _controllerB.forward();
+                onTap: () {
+                  setState(() {
+                    padding1 = 24;
+                  });
                 },
-                onTapUp: (TapUpDetails details) {
-                  _controllerB.reverse();
-                },
-                child: Transform.scale(
-                  scale: _scaleB,
-                  child: Card(
-                    color: Colors.teal,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 0.15,
+              );
+            },
+          ),
+          TweenAnimationBuilder<double>(
+            onEnd: () {
+              setState(() {
+                padding2 = 8.0;
+              });
+            },
+            tween: Tween<double>(begin: 0, end: padding2),
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.elasticOut,
+            builder: (BuildContext context, double size, Widget? child) {
+              return GestureDetector(
+                child: Container(
+                  color: Colors.transparent,
+                  height: MediaQuery.of(context).size.height * .2,
+                  width: MediaQuery.of(context).size.width,
+                  child: Padding(
+                    padding: EdgeInsets.all(padding2),
+                    child: const Card(
+                      color: Colors.cyan,
                     ),
                   ),
                 ),
-              ),
-            ),
-          ],
-        ),
+                onTap: () {
+                  setState(() {
+                    padding2 = 24;
+                  });
+                },
+              );
+            },
+          ),
+        ],
       ),
     );
-  }
-
-  void _onTapDown(TapDownDetails details) {
-    _controllerA.forward();
-  }
-
-  void _onTapUp(TapUpDetails details) {
-    _controllerA.reverse();
   }
 }
